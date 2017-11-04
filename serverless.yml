@@ -9,7 +9,7 @@ provider:
 
 functions:
   hello:
-    handler: handler.retrieve_upcoming_lambdas # required, handler set in AWS Lambda
+    handler: handler.retrieve_upcoming_meetups # required, handler set in AWS Lambda
     description: Description of what the lambda function does # optional, Description to publish to AWS
     environment:
       MEETUP_API_KEY: replacemeafterdeploying
