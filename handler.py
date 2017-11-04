@@ -5,7 +5,6 @@ import requests
 
 import time
 import datetime
-# from datetime import datetime, date
 
 MEETUP_API_KEY = os.environ["MEETUP_API_KEY"]
 SLACK_WEBHOOK_URL = os.environ["SLACK_WEBHOOK_URL"]

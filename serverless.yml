@@ -1,0 +1,22 @@
+# serverless.yml
+service: meetupReminderService
+
+provider:
+  name: aws
+  runtime: python3.6
+  memorySize: 128 # optional, in MB, default is 1024
+  versionFunctions: false # optional, default is true
+
+functions:
+  hello:
+    handler: handler.retrieve_upcoming_lambdas # required, handler set in AWS Lambda
+    description: Description of what the lambda function does # optional, Description to publish to AWS
+    environment:
+      MEETUP_API_KEY: replacemeafterdeploying
+      SLACK_WEBHOOK_URL: replacemeafterdeploying
+
+    events:
+       - schedule: cron(0 13 ? * MON *)
+
+plugins:
+  - serverless-python-requirements
