@@ -8,12 +8,12 @@ provider:
   versionFunctions: false # optional, default is true
 
 functions:
-  hello:
+  main:
     handler: handler.retrieve_upcoming_meetups # required, handler set in AWS Lambda
     description: Description of what the lambda function does # optional, Description to publish to AWS
     environment:
-      MEETUP_API_KEY: replacemeafterdeploying
-      SLACK_WEBHOOK_URL: replacemeafterdeploying
+      MEETUP_API_KEY: ${opt:meetup-api-key}
+      SLACK_WEBHOOK_URL: ${opt:slack-webhook-url}
 
     events:
        - schedule: cron(0 13 ? * MON *)

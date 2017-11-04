@@ -24,7 +24,7 @@ def format_meetup_info(meetup):
         formatted_date=formatted_date, **meetup)
 
 
-def retrive_upcoming_meetups(event=None, context=None):
+def retrieve_upcoming_meetups(event=None, context=None):
     meetups = requests.get(
         "https://api.meetup.com/self/calendar",
         params={"sign": "true",
@@ -53,4 +53,4 @@ Ta med en venn, ta med to, meetups er gøy!
 
 
 if __name__ == "__main__":
-    retrive_upcoming_meetups()
+    retrieve_upcoming_meetups()
