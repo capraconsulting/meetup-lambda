@@ -1,7 +1,7 @@
 # Meetup auto-reminder
 
 
-[![Known Vulnerabilities](https://snyk.io/test/github/capraconsulting/meetup-lambda/badge.svg)](https://snyk.io/test/github/capraconsulting/meetup-lambda)
+[![Known Vulnerabilities](https://snyk.io/test/github/capraconsulting/meetup-lambda:requirements.txt/badge.svg)](https://snyk.io/test/github/capraconsulting/meetup-lambda:requirements.txt)
 
 
 A simple piece of software posting a summary of upcoming meetups to a Slack channel.
