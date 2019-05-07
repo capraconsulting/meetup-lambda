@@ -3,20 +3,29 @@ service: meetupReminderService
 
 provider:
   name: aws
+  stage: ${opt:stage, 'production'}
+  region: ${opt:region, 'eu-west-1'}
   runtime: python3.6
   memorySize: 128 # optional, in MB, default is 1024
   versionFunctions: false # optional, default is true
+  tags:
+    project: meetup-reminder
 
 functions:
   main:
     handler: handler.retrieve_upcoming_meetups # required, handler set in AWS Lambda
     description: Description of what the lambda function does # optional, Description to publish to AWS
     environment:
-      MEETUP_API_KEY: ${opt:meetup-api-key}
-      SLACK_WEBHOOK_URL: ${opt:slack-webhook-url}
+      # The ~true suffix indicates an encrypted value.
+      MEETUP_API_KEY: ${ssm:/meetup-reminder/prod/meetup-api-key~true}
+      SLACK_WEBHOOK_URL: ${ssm:/meetup-reminder/prod/slack-webhook-url~true}
 
     events:
        - schedule: cron(0 13 ? * MON *)
 
 plugins:
   - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    pythonBin: venv/bin/python
