@@ -49,7 +49,8 @@ Ta med en venn, ta med to, meetups er gøy!
     """.format(meetup_list=meetup_list_text)
 
     requests.post(SLACK_WEBHOOK_URL, json={"text": message_body})
-    # print(message_body)
+    print("Message sent")
+    print(message_body)
 
 
 if __name__ == "__main__":
