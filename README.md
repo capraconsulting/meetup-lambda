@@ -1,5 +1,8 @@
 # Meetup auto-reminder
 
+:warning: This integration is no longer working due to removal
+of API keys feature at meetup.com. :warning:
+
 A simple piece of software posting a summary of upcoming meetups to a Slack channel.
 
 Intended to run on [AWS Lambda](http://docs.aws.amazon.com/lambda/latest/dg/welcome.html), using [Serverless](https://serverless.com/)
@@ -16,6 +19,8 @@ Two elements in Parameter Store:
 * `/meetup-reminder/prod/slack-webhook-url` - Slack webhook URL
 
 ### Deploying (Capra setup)
+
+:warning: This stack is currently deleted and not in use. :warning:
 
 Install Serverless globally:
 
