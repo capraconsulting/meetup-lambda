@@ -41,11 +41,11 @@ def retrieve_upcoming_meetups():
     try:
         response.raise_for_status()
     except Exception:
-        logger.debug("Content received: {}", response.content)
+        logger.debug(f"Content received: {response.content}")
         raise
 
     meetups = response.json()
-    logger.debug("Data received: %s" % json.dumps(meetups))
+    logger.debug(f"Data received: {json.dumps(meetups)}")
 
     start_time = time.time()
     end_time = start_time + (3600 * 24 * UPCOMING_PERIOD)
@@ -58,7 +58,7 @@ def retrieve_upcoming_meetups():
 
 
 def post_slack(message):
-    logger.debug("Sending message to Slack: %s" % message)
+    logger.debug(f"Sending message to Slack: {message}")
     requests.post(SLACK_WEBHOOK_URL, json={"text": message})
 
 
@@ -72,7 +72,7 @@ def main():
 
 https://github.com/capraconsulting/meetup-lambda"""
         )
-        return
+        raise
 
     meetup_list_text = "\n".join(map(format_meetup_info, upcoming))
 
