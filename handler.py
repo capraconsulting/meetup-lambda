@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import datetime
+import json
+import logging
 import os
 import time
 
@@ -11,6 +13,9 @@ SLACK_WEBHOOK_URL = os.environ["SLACK_WEBHOOK_URL"]
 
 # Number of days to look for meetups to include in summary
 UPCOMING_PERIOD = 14
+
+logger = logging.getLogger("meetup")
+logger.setLevel(logging.DEBUG)
 
 
 def time_inside_desired_period(start_time, end_time):
@@ -26,12 +31,21 @@ def format_meetup_info(meetup):
     )
 
 
-def retrieve_upcoming_meetups(event=None, context=None):
-    meetups = requests.get(
+def retrieve_upcoming_meetups():
+    response = requests.get(
         "https://api.meetup.com/self/calendar",
         params={"sign": "true", "key": MEETUP_API_KEY},
         headers={"Accept": "application/json"},
-    ).json()
+    )
+
+    try:
+        response.raise_for_status()
+    except Exception:
+        logger.debug("Content received: {}", response.content)
+        raise
+
+    meetups = response.json()
+    logger.debug("Data received: %s" % json.dumps(meetups))
 
     start_time = time.time()
     end_time = start_time + (3600 * 24 * UPCOMING_PERIOD)
@@ -39,23 +53,42 @@ def retrieve_upcoming_meetups(event=None, context=None):
     meetups_in_desired_period = filter(
         time_inside_desired_period(start_time, end_time), meetups
     )
-    # print(json.dumps(meetups))
 
-    meetup_list_text = "\n".join(map(format_meetup_info, meetups_in_desired_period))
+    return meetups_in_desired_period
 
-    message_body = """Alle elsker meetups! Her er en oversikt over meetups de neste to ukene:
 
-{meetup_list}
+def post_slack(message):
+    logger.debug("Sending message to Slack: %s" % message)
+    requests.post(SLACK_WEBHOOK_URL, json={"text": message})
+
+
+def main():
+    upcoming = None
+    try:
+        upcoming = retrieve_upcoming_meetups()
+    except Exception:
+        post_slack(
+            """I failed to retrieve the latest list of meetups. Please check my logs!
+
+https://github.com/capraconsulting/meetup-lambda"""
+        )
+        return
+
+    meetup_list_text = "\n".join(map(format_meetup_info, upcoming))
+
+    message_body = f"""Alle elsker meetups! Her er en oversikt over meetups de neste to ukene:
+
+{meetup_list_text}
 
 Ta med en venn, ta med to, meetups er gøy!
-    """.format(
-        meetup_list=meetup_list_text
-    )
+https://github.com/capraconsulting/meetup-lambda"""
 
-    requests.post(SLACK_WEBHOOK_URL, json={"text": message_body})
-    print("Message sent")
-    print(message_body)
+    post_slack(message_body)
+
+
+def lambda_handler(event=None, context=None):
+    main()
 
 
 if __name__ == "__main__":
-    retrieve_upcoming_meetups()
+    main()

@@ -13,7 +13,7 @@ provider:
 
 functions:
   main:
-    handler: handler.retrieve_upcoming_meetups # required, handler set in AWS Lambda
+    handler: handler.lambda_handler # required, handler set in AWS Lambda
     description: Description of what the lambda function does # optional, Description to publish to AWS
     environment:
       # The ~true suffix indicates an encrypted value.
